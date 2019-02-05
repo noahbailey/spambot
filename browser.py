@@ -6,7 +6,9 @@
 
 import sys
 import random
+import pickle 
 from time import sleep
+
 from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.firefox.options import Options 
@@ -21,15 +23,20 @@ def webdriver_init():
     driver = webdriver.Firefox(options=firefox_options )
     return driver
 
+def load_cookies(driver):
+    driver.get("https://www.google.com")
+    cookies = pickle.load(open("glogin.pkl", "rb"))
+    for cookie in cookies: 
+        driver.add_cookie(cookie) 
+
+
 def webdriver_rootpage(driver,searchterm): 
     rootpage = 'https://www.google.com/search?q=' + str(searchterm)
     driver.get(rootpage)
     driver.implicitly_wait(5)
     print(driver.title)
-    #outputfile = driver.title.replace(' ','_') + '.png'
-    #driver.save_screenshot(outputfile)
-
-
+    outputfile = driver.title.replace(' ','_') + '.png'
+    driver.save_screenshot('img/' + outputfile)
 
 
 def filter_webpages(href): 
@@ -65,7 +72,7 @@ def webdriver_subpage(driver,subpages):
 
         except: 
             #print("Click failed on " + randomlink.get_attribute("href"))
-            print("Click failed. ")
+            #sprint("Click failed. ")
             driver.execute_script("window.history.go(-1)")
             links_clicked+=1
             continue
@@ -76,16 +83,25 @@ def webdriver_subpage(driver,subpages):
         pageurl = driver.current_url
         print(pagetitle)
         imgname = pageurl.replace('https://','').replace('/','_').replace(' ','_') + '.png'
-        driver.save_screenshot(imgname)
+        driver.save_screenshot('img/' + imgname)
         driver.execute_script("window.history.go(-1)")
         sleep(1)
         driver.implicitly_wait(5)
         links_clicked+=1
+        
 
 def search(searchterm): 
+    # Initialize webdriver
     driver = webdriver_init() 
+
+    # Load login cookies from file
+    load_cookies(driver)
+
+    # Start a search: 
     webdriver_rootpage(driver, searchterm)
+    
+    # Try browsing subpagres of the search result: 
     try:
-        webdriver_subpage(driver, 5)
+        webdriver_subpage(driver, 7)
     except: 
         driver.close()
