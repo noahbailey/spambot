@@ -8,6 +8,7 @@ import sys
 import random
 import pickle 
 from time import sleep
+from random import randint
 
 from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys 
@@ -19,7 +20,8 @@ from selenium.webdriver.firefox.options import Options
 
 def webdriver_init(): 
     firefox_options = Options()
-    firefox_options.headless = True 
+    #firefox_options.headless = True 
+    firefox_options.headless = False
     driver = webdriver.Firefox(options=firefox_options )
     return driver
 
@@ -31,14 +33,24 @@ def load_cookies(driver):
 
 
 def webdriver_rootpage(driver,searchterm): 
-    rootpage = 'https://www.google.com/search?q=' + str(searchterm)
+    rootpage = 'https://www.google.com'
     driver.get(rootpage)
     driver.implicitly_wait(5)
+
+    # Locate the search field and enter the search term
+    searchfield = driver.find_element_by_css_selector('.gLFyf')
+    for i in searchterm: 
+        searchfield.send_keys(i)
+        sleep(random.uniform(0.01,0.3))
+    searchfield.send_keys(Keys.RETURN)
+    
+    # Wait for results page to load: 
+    driver.implicitly_wait(5)
+    sleep(random.uniform(2,5))
     print(driver.title)
     outputfile = driver.title.replace(' ','_') + '.png'
-    driver.save_screenshot('img/' + outputfile)
 
-
+# Exclude pages that include 'google' in them
 def filter_webpages(href): 
     searchable = True
     if 'google.com' in href: 
@@ -46,7 +58,6 @@ def filter_webpages(href):
     if 'googleusercontent' in href: 
         searchable = False 
     return searchable 
-
 
 
 def webdriver_subpage(driver,subpages): 
@@ -59,33 +70,38 @@ def webdriver_subpage(driver,subpages):
     while links_clicked < subpages:  
 
         # https://stackoverflow.com/questions/20315000/select-href-with-id-and-class-using-xpath
-        #links = driver.find_elements_by_xpath("//div[@id='search']//a[@href]")
         links = driver.find_elements_by_css_selector(".r a")
         randomlink = random.choice(links)
         href = randomlink.get_attribute("href")
 
+        # Exclude irrelevant pages: 
         if not (filter_webpages(href)):
             continue
         
+        # Click a result from the search page: 
         try:
             randomlink.click()
+            driver.implicitly_wait(5)
+            sleep(random.uniform(2,5))  
 
+        # Go back on failed click: 
         except: 
-            #print("Click failed on " + randomlink.get_attribute("href"))
-            #sprint("Click failed. ")
+            sleep(random.uniform(2,5))
             driver.execute_script("window.history.go(-1)")
             links_clicked+=1
             continue
 
-        sleep(2)
-        driver.implicitly_wait(5)
+        # Wait for page page to load: 
+
         pagetitle = driver.title
         pageurl = driver.current_url
         print(pagetitle)
         imgname = pageurl.replace('https://','').replace('/','_').replace(' ','_') + '.png'
         driver.save_screenshot('img/' + imgname)
+        
+        # When done on page, go back and prepare to click another: 
         driver.execute_script("window.history.go(-1)")
-        sleep(1)
+        sleep(random.uniform(2,5))
         driver.implicitly_wait(5)
         links_clicked+=1
         
@@ -100,8 +116,8 @@ def search(searchterm):
     # Start a search: 
     webdriver_rootpage(driver, searchterm)
     
-    # Try browsing subpagres of the search result: 
+    # Try browsing subpages of the search result: 
     try:
-        webdriver_subpage(driver, 7)
+        webdriver_subpage(driver, 4)
     except: 
         driver.close()
