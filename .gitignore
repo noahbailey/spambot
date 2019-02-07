@@ -1,0 +1,6 @@
+img/*
+__pycache__/*
+.directory
+geckodriver.log
+private/*
+

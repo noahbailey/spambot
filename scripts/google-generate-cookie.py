@@ -22,7 +22,7 @@ def webdriver_init():
 
 def export_cookies(driver): 
     driver.get("https://www.google.com")
-    pickle.dump(driver.get_cookies() , open("glogin.pkl","wb"))
+    pickle.dump(driver.get_cookies() , open("private/glogin.pkl","wb"))
 
 def main(): 
     # Init webdriver with non-headless operation:   

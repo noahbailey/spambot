@@ -27,7 +27,7 @@ def webdriver_init():
 
 def load_cookies(driver):
     driver.get("https://www.google.com")
-    cookies = pickle.load(open("glogin.pkl", "rb"))
+    cookies = pickle.load(open("private/glogin.pkl", "rb"))
     for cookie in cookies: 
         driver.add_cookie(cookie) 
 
