@@ -42,6 +42,10 @@ def webdriver_rootpage(driver,searchterm):
     for i in searchterm: 
         searchfield.send_keys(i)
         sleep(random.uniform(0.01,0.3))
+    
+    for i in range(randint(1,3)):
+        searchfield.send_keys(Keys.DOWN)
+        sleep(0.3)
     searchfield.send_keys(Keys.RETURN)
     
     # Wait for results page to load: 
