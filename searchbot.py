@@ -9,7 +9,13 @@
 import requests
 import random 
 import csv 
+import os, signal 
 
+def check_kill_process(proc): 
+    for line in os.popen("ps ax | grep " + proc + " | grep -v grep"):
+        fields = line.split()
+        pid = fields[0]
+        os.kill(int(pid), signal.SIGKILL)
 
 # SERP research top 50,000 list: 
 print('Downloading search terms...')
@@ -27,11 +33,12 @@ with open('top-1m.csv') as top1m_csv:
         top1m.append(row)
 
 while True:
-    if (random.choice([True,False])): 
-        searchterm = random.choice(serp_top)
-    else: 
+    if (random.randint(1,5) == 1): 
         searchterm = random.choice(top1m)[1]
+    else: 
+        searchterm = random.choice(serp_top)
     #print(searchterm)
     import browser 
     browser.search(searchterm)
+    check_kill_process('marionette')
 
