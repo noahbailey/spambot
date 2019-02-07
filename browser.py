@@ -1,7 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Browser subprocess
-
 # https://www.seleniumhq.org/
 
 import sys
@@ -14,9 +13,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.firefox.options import Options 
 
-# + sys.argv[1]
-#rootpage = "https://www.google.com/search?q=cat+pictures"
-#rootpage = 'https://youtube.com'
 
 def webdriver_init(): 
     firefox_options = Options()

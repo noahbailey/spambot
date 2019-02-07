@@ -1,13 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-# Service 
-
-# Retrieve the term list
-#   1. Top 500 products
-#   2. Top 500 google/bing searches
-#   3. Top 100 websites
-#   4. Top 100 celebrities
-#   5. News? Headlines? 
+# Download Amazon Alexa rankings from S3
 
 import requests, zipfile, io
 

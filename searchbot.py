@@ -1,6 +1,4 @@
-#!/usr/bin/python
-
-# Service 
+#!/usr/bin/env python3
 
 # Retrieve the term list
 # -- Top 50,000 searches
