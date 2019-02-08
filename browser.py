@@ -7,27 +7,63 @@ import sys
 import random
 import pickle 
 from time import sleep
+import time
 from random import randint
 
 from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys 
 from selenium.webdriver.firefox.options import Options 
 
+from slugify import slugify
 
+# --- Runtime configuration: 
+
+hide_firefox = False
+save_screenshots = True
+
+# --- Functions begin: 
+
+def write_log(log_type,message): 
+    output = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+    if(log_type == 'nav'): 
+        output += " [NAVIGATION] " + message
+    elif(log_type == 'search'): 
+        output += " [SEARCHTERM] " + message 
+    elif(log_type == 'img'): 
+        output += " [SCREENSHOT] " + message 
+    elif(log_type == 'cookie'): 
+        output += " [LOADCOOKIE] " + message 
+    output += '\n'
+
+    with open('searchbot.log', 'a') as log_file: 
+        log_file.write(output)
+
+# Take a screenshot of the webpage: 
+def screenshot(driver): 
+    imgname = slugify(driver.title)
+    imgname += '.png'
+    driver.save_screenshot('img/' + imgname)
+    write_log('img', imgname)
+
+# Create webdriver object and start Firefox/Gecko
 def webdriver_init(): 
     firefox_options = Options()
-    #firefox_options.headless = True 
-    firefox_options.headless = False
+    firefox_options.headless = hide_firefox
     driver = webdriver.Firefox(options=firefox_options )
     return driver
 
+# Import cookies previously exported
+# Used to retain a session 
 def load_cookies(driver):
-    driver.get("https://www.google.com")
+    cookie_url = "https://www.google.com"
+    driver.get(cookie_url)
     cookies = pickle.load(open("private/glogin.pkl", "rb"))
     for cookie in cookies: 
         driver.add_cookie(cookie) 
+    write_log('cookie', cookie_url)
 
 
+# Open google search page and type search
 def webdriver_rootpage(driver,searchterm): 
     rootpage = 'https://www.google.com'
     driver.get(rootpage)
@@ -43,12 +79,13 @@ def webdriver_rootpage(driver,searchterm):
         searchfield.send_keys(Keys.DOWN)
         sleep(0.3)
     searchfield.send_keys(Keys.RETURN)
+
+    # Output search activity to log: 
+    write_log('search', searchterm)
     
     # Wait for results page to load: 
     driver.implicitly_wait(5)
-    sleep(random.uniform(2,5))
-    print(driver.title)
-    outputfile = driver.title.replace(' ','_') + '.png'
+    sleep(random.uniform(5,10))
 
 # Exclude pages that include 'google' in them
 def filter_webpages(href): 
@@ -59,16 +96,13 @@ def filter_webpages(href):
         searchable = False 
     return searchable 
 
-
+# Go to subpages and 'explore' the results
 def webdriver_subpage(driver,subpages): 
-
     if not subpages: 
         subpages = 5
-
     links_clicked = 0
 
     while links_clicked < subpages:  
-
         # https://stackoverflow.com/questions/20315000/select-href-with-id-and-class-using-xpath
         links = driver.find_elements_by_css_selector(".r a")
         randomlink = random.choice(links)
@@ -82,11 +116,11 @@ def webdriver_subpage(driver,subpages):
         try:
             randomlink.click()
             driver.implicitly_wait(5)
-            sleep(random.uniform(2,5))  
+            sleep(random.uniform(5,10))  
 
         # Go back on failed click: 
         except: 
-            sleep(random.uniform(2,5))
+            sleep(random.uniform(5,10))
             driver.execute_script("window.history.go(-1)")
             links_clicked+=1
             continue
@@ -96,15 +130,18 @@ def webdriver_subpage(driver,subpages):
         pagetitle = driver.title
         pageurl = driver.current_url
         print(pagetitle)
-        imgname = pageurl.replace('https://','').replace('/','_').replace(' ','_') + '.png'
-        driver.save_screenshot('img/' + imgname)
+        write_log('nav', pageurl)
+
+        # if saving screenshots is enabled, take a picture of current page: 
+        if(save_screenshots):
+            screenshot(driver)
         
         # When done on page, go back and prepare to click another: 
         driver.execute_script("window.history.go(-1)")
         sleep(random.uniform(2,5))
         driver.implicitly_wait(5)
         links_clicked+=1
-        
+
 
 def search(searchterm): 
     # Initialize webdriver
@@ -114,6 +151,7 @@ def search(searchterm):
     load_cookies(driver)
 
     # Start a search: 
+    print(searchterm)
     webdriver_rootpage(driver, searchterm)
     
     # Try browsing subpages of the search result: 
@@ -121,3 +159,4 @@ def search(searchterm):
         webdriver_subpage(driver, 4)
     except: 
         driver.close()
+        
