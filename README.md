@@ -26,6 +26,7 @@ Since this script is python3, it's fairly easy to install and requires only a fe
 
     pip install selenium
     pip install urllib3
+    pip install python-slugify
 
 ### Gecko Driver
 
