@@ -2,21 +2,21 @@
 
 ## Overview
 
-The objective with this project is to create a system for adding 'noise' to a users' internet advertizing profile. This is essentially the only way left to retain a 'clean' profile these days, other than going outside... 
+The objective with this project is to create a system for adding useless marketing information to an Internet consumer profile. This is essentially the only way left to retain a 'clean' profile these days, other than going outside... 
 
-Currently this is strictly experimental, and might always be. Google has impressive neural networks fighting every second of every day to retain their competitive edge on other marketing companies, there's simply no way to compete with that type of analysis... 
+Currently this is strictly experimental, and might always be. Google has impressive neural networks and stuff fighting every second of every day to retain their competitive edge on other marketing companies, there's simply no way to compete with that type of analysis... Maybe shoving trash data into it will slow it down, but it certainly won't stop it. 
 
 #### Disclaimer
 > There is a very good chance it will find some _unsavory_ content online. I absolutely do not curate search terms so given the nature of the internet, this is almost a certainty. Please only run this script in private or an environment without any expectation of civility... 
 
 ## Status
 
-Tested on the following system: 
+Tested on the following systems: 
 
 Operating System        | Python Version | Firefox Version | Status
 ----------------------- | -------------- | --------------- | ------
 Arch Linux 64bit        | Python 3.7.2   | 65.0 (64bit)    | :heavy_check_mark:
-Ubuntu 18.04 (Hyper-V)  | Python 3.6.7   | 65.0 (64bit)    | :heavy_check_mark:
+Ubuntu 18.04(LTS) 64bit | Python 3.6.7   | 65.0 (64bit)    | :heavy_check_mark:
 
 ## Installing
 
@@ -66,3 +66,7 @@ Simply run the searchbot script:
     $ ./searchbot.py
 
 > Please don't run this as root/sudo!
+
+## Contributing
+
+Do you think you're smart? Do you think my code is trash? Well don't keep it to yourself! Best way to show me who the big man is, is to submit a pull request with a snarky message!
