@@ -4,19 +4,15 @@
 
 The objective with this project is to create a system for adding useless marketing information to an Internet consumer profile. This is essentially the only way left to retain a 'clean' profile these days, other than going outside... 
 
-Currently this is strictly experimental, and might always be. Google has impressive neural networks and stuff fighting every second of every day to retain their competitive edge on other marketing companies, there's simply no way to compete with that type of analysis... Maybe shoving trash data into it will slow it down, but it certainly won't stop it. 
+## How it Works
+
+This script works by using the Alexa top 1 million domains and a list of the top 50 thousand search terms to 'fuzz' a search engine. The ideal result of this is to add meaningless noise to a consumer profile and devalue advertisement analytics. 
+
+To accomplish this, the script creates a cookie file containing a google login, then uses that cookie to stay logged into Google while running the searches from a headless browser. 
 
 #### Disclaimer
 > There is a very good chance it will find some _unsavory_ content online. I absolutely do not curate search terms so given the nature of the internet, this is almost a certainty. Please only run this script in private or an environment without any expectation of civility... 
 
-## Status
-
-Tested on the following systems: 
-
-Operating System        | Python Version | Firefox Version | Status
------------------------ | -------------- | --------------- | ------
-Arch Linux 64bit        | Python 3.7.2   | 65.0 (64bit)    | :heavy_check_mark:
-Ubuntu 18.04(LTS) 64bit | Python 3.6.7   | 65.0 (64bit)    | :heavy_check_mark:
 
 ## Installing
 
