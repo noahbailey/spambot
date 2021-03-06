@@ -13,8 +13,23 @@ To accomplish this, the script creates a cookie file containing a google login, 
 #### Disclaimer
 > There is a very good chance it will find some _unsavory_ content online. I absolutely do not curate search terms so given the nature of the internet, this is almost a certainty. Please only run this script in private or an environment without any expectation of civility... 
 
+## Running (The easy way)
 
-## Installing
+To get up and running quickly, just build and run the docker container: 
+
+    docker built -t "spambot" .
+    docker run -it spambot"
+
+Within moments the container will spring to life and begin surfing the web. 
+
+```
+2021-03-06 19:41:33 [SEARCHTERM] scaffolding
+2021-03-06 19:41:50 [NAVIGATION] https://www.homedepot.ca/en/home/categories/tools/ladders-and-scaffolding/scaffolding.html
+2021-03-06 19:42:05 [NAVIGATION] https://www.rona.ca/en/tools/ladders-stools-and-scaffolding/scaffolding-164505
+...
+```
+
+## Running (The manual way)
 
 Since this script is python3, it's fairly easy to install and requires only a few additional prerequisites to run: 
 
