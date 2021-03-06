@@ -18,7 +18,7 @@ from slugify import slugify
 
 # --- Runtime configuration: 
 
-hide_firefox = False
+hide_firefox = True
 save_screenshots = True
 
 # --- Functions begin: 
@@ -40,9 +40,11 @@ def write_log(log_type,message):
 
 # Take a screenshot of the webpage: 
 def screenshot(driver): 
-    imgname = slugify(driver.title)
+    print("Taking a screenshot.")
+    imgname = "/home/img/"
+    imgname += slugify(driver.title)
     imgname += '.png'
-    driver.save_screenshot('img/' + imgname)
+    driver.save_screenshot(imgname)
     write_log('img', imgname)
 
 # Create webdriver object and start Firefox/Gecko
@@ -104,7 +106,7 @@ def webdriver_subpage(driver,subpages):
 
     while links_clicked < subpages:  
         # https://stackoverflow.com/questions/20315000/select-href-with-id-and-class-using-xpath
-        links = driver.find_elements_by_css_selector(".r a")
+        links = driver.find_elements_by_css_selector("div.tF2Cxc:nth-child(2) > div:nth-child(1) > a:nth-child(1)")
         randomlink = random.choice(links)
         href = randomlink.get_attribute("href")
 
@@ -129,7 +131,7 @@ def webdriver_subpage(driver,subpages):
 
         pagetitle = driver.title
         pageurl = driver.current_url
-        print(pagetitle)
+        print("Page title: " + pagetitle)
         write_log('nav', pageurl)
 
         # if saving screenshots is enabled, take a picture of current page: 
@@ -148,10 +150,10 @@ def search(searchterm):
     driver = webdriver_init() 
 
     # Load login cookies from file
-    load_cookies(driver)
+    #load_cookies(driver)
 
     # Start a search: 
-    print(searchterm)
+    #print(searchterm)
     webdriver_rootpage(driver, searchterm)
     
     # Try browsing subpages of the search result: 

@@ -16,13 +16,13 @@ def check_kill_process(proc):
 
 # SERP research top 50,000 list: 
 # TODO: find better source than my old project. It seems hard to find these days... 
-print('Downloading search terms...')
-top_url = 'https://raw.githubusercontent.com/yabona/obfuscator/master/SERP_top'
-serp_top_raw = str((requests.get(top_url, allow_redirects=True)).content)
-serp_top = str.split(serp_top_raw, '\\n')
+print('Loading search terms list...')
+serp_top_raw = open("SERP_top", 'r')
+serp_top = serp_top_raw.readlines()
 
 
 # Alexa Top 1 million: 
+print('Loading top1m data file...')
 top1m = []
 with open('top-1m.csv') as top1m_csv: 
     reader = csv.reader(top1m_csv)
@@ -35,7 +35,7 @@ while True:
         searchterm = random.choice(top1m)[1]
     else: 
         searchterm = random.choice(serp_top)
-    #print(searchterm)
+    print("Search term: " + searchterm)
     import browser 
     browser.search(searchterm)
     check_kill_process('marionette')
