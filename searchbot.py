@@ -35,7 +35,6 @@ while True:
         searchterm = random.choice(top1m)[1]
     else: 
         searchterm = random.choice(serp_top)
-    print("Search term: " + searchterm)
     import browser 
     browser.search(searchterm)
     check_kill_process('marionette')

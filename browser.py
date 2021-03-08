@@ -18,34 +18,19 @@ from slugify import slugify
 
 # --- Runtime configuration: 
 
-hide_firefox = True
-save_screenshots = True
+hide_firefox =      False
+save_screenshots =  True
+use_cookies =      False
 
 # --- Functions begin: 
 
-def write_log(log_type,message): 
-    output = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
-    if(log_type == 'nav'): 
-        output += " [NAVIGATION] " + message
-    elif(log_type == 'search'): 
-        output += " [SEARCHTERM] " + message 
-    elif(log_type == 'img'): 
-        output += " [SCREENSHOT] " + message 
-    elif(log_type == 'cookie'): 
-        output += " [LOADCOOKIE] " + message 
-    output += '\n'
-
-    with open('searchbot.log', 'a') as log_file: 
-        log_file.write(output)
-
 # Take a screenshot of the webpage: 
 def screenshot(driver): 
-    print("Taking a screenshot.")
     imgname = "/home/img/"
     imgname += slugify(driver.title)
     imgname += '.png'
     driver.save_screenshot(imgname)
-    write_log('img', imgname)
+    print('[SCREENSHOT] ' +  imgname)
 
 # Create webdriver object and start Firefox/Gecko
 def webdriver_init(): 
@@ -62,7 +47,7 @@ def load_cookies(driver):
     cookies = pickle.load(open("private/glogin.pkl", "rb"))
     for cookie in cookies: 
         driver.add_cookie(cookie) 
-    write_log('cookie', cookie_url)
+    print('[LOADCOOKIE] ' + cookie_url)
 
 
 # Open google search page and type search
@@ -83,7 +68,7 @@ def webdriver_rootpage(driver,searchterm):
     searchfield.send_keys(Keys.RETURN)
 
     # Output search activity to log: 
-    write_log('search', searchterm)
+    print('[SEARCHTERM] ' + searchterm)
     
     # Wait for results page to load: 
     driver.implicitly_wait(5)
@@ -131,8 +116,8 @@ def webdriver_subpage(driver,subpages):
 
         pagetitle = driver.title
         pageurl = driver.current_url
-        print("Page title: " + pagetitle)
-        write_log('nav', pageurl)
+        print('[PAGE_TITLE] ' + pagetitle)
+        print('[NAVIGATION] ' + pageurl)
 
         # if saving screenshots is enabled, take a picture of current page: 
         if(save_screenshots):
@@ -150,10 +135,9 @@ def search(searchterm):
     driver = webdriver_init() 
 
     # Load login cookies from file
-    #load_cookies(driver)
+    if use_cookies: 
+        load_cookies(driver)
 
-    # Start a search: 
-    #print(searchterm)
     webdriver_rootpage(driver, searchterm)
     
     # Try browsing subpages of the search result: 
