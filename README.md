@@ -1,12 +1,16 @@
-# SearchBot
+# SpamBot
+
+![](https://img.shields.io/docker/cloud/build/noahbailey/spambot)
 
 ## Overview
 
-The objective with this project is to create a system for adding useless marketing information to an Internet consumer profile. This is essentially the only way left to retain a 'clean' profile these days, other than going outside... 
+Spambot is essentially an active counter-surveillance tool. Spambot performs 'data poisoning' on your search history to insert meaningless and useless data. Ultimately, the goal is to de-value and ruin targeting advertising online. 
+
+To further damage the analytical models of Google, it will always click one of the suggestions while searching. It will also browse multiple search results quickly to damage the 'bounce rate' and 'session time' metrics that are used for search result placement. 
 
 ## How it Works
 
-This script works by using the Alexa top 1 million domains and a list of the top 50 thousand search terms to 'fuzz' a search engine. The ideal result of this is to add meaningless noise to a consumer profile and devalue advertisement analytics. 
+This script works by using the Alexa top 1 million domains and a list of the top 50 thousand search terms to add generic and useless search queries to your profile. 
 
 To accomplish this, the script creates a cookie file containing a google login, then uses that cookie to stay logged into Google while running the searches from a headless browser. 
 
@@ -15,7 +19,11 @@ To accomplish this, the script creates a cookie file containing a google login, 
 
 ## Running (The easy way)
 
-To get up and running quickly, just build and run the docker container: 
+To get up and running quickly, pull and run the docker container:
+
+    docker run -it noahbailey/spambot:latest
+
+Or, you may choose to build the container locally: 
 
     docker built -t "spambot" .
     docker run -it spambot"
